@@ -3,56 +3,37 @@ import scala.collection.mutable.ArrayBuffer
 import scala.io.Source
 import scala.util.Random
 
-
 object DataHandling
 {
-    def main(args: Array[String]): Unit = {
         val fileName = "beer_processed.txt"
         val fSource = Source.fromFile(fileName)
 
-        val dataArray = new ArrayBuffer[Array[Float]]()
+        var dataArray = new ArrayBuffer[Array[Float]]()
 
         for(line<-fSource.getLines()) {
             dataArray += line.split("\t").map(_.toFloat)
         }
         fSource.close()
-        dataArray.foreach(x=>x.foreach(println))
-        
+
+        var numSamp = dataArray.length
+        var numTrainData = (numSamp*.6667).toInt
+        var numTestData = numSamp - (numSamp*.6667).toInt
+        println(numSamp + " " + numTrainData +  " " + numTestData)
+        var testDataArrays  =    new Array[Array[Array[Float]]](10)
+        var trainDataArrays =    new Array[Array[Array[Float]]](10)
+        var testDataArr     =    new Array[Array[Float]](numTestData)
+        var trainDataArr = new Array[Array[Float]](numTrainData)
+
+
+            Random.shuffle(dataArray)
+            dataArray.copyToArray(trainDataArr,0,numTrainData)
+            dataArray.copyToArray(testDataArr,0,numTestData)
+
+    def getTestData(): Unit ={
+        return testDataArr
     }
 
-
-
-
-
-    //
-//        //beerData.foreach(println)
-//
-//        for(dataEl <- beerData){
-//            beerDataFormatted += dataEl
-//        }
-//
-//        beerDataFormatted.foreach(println)
-
-//        for(el <- beerDataFormatted)
-//            println(el.mkString(","))
-//
-//        val numSamp = beerDataFormatted.length
-//        val numTrainData = numSamp*(2/3)
-//        val numTestData = numSamp*(1/3)
-//        val shuffledData = Random.shuffle(beerDataFormatted)
-//
-//        val trainData = new ArrayBuffer[Array[Float]](numTrainData)
-//        val testData = new ArrayBuffer[Array[Float]](numTestData)
-//
-//        for(num <- 0 to numTrainData){
-//            trainData += shuffledData[num]
-//        }
-//        Random.shuffle(beerData)
-//        val i = 0
-//        for(el <- trainData) {
-//            i++
-//            println("NUM : " + i + " - "+ el.mkString(","))
-//
-//        }
-
+    def getTrainData(): Unit ={
+        return trainDataArr
+    }
 }
